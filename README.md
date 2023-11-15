@@ -109,9 +109,8 @@ Contoh penggunaan kedua metode tersebut yang tepat adalah:
 - Navigator.push(): Misalnya kita ingin membuat aplikasi yang memiliki dua halaman, yaitu halaman utama dan halaman detail. Pada halaman utama, kita menampilkan daftar produk yang dapat diklik oleh pengguna. Ketika pengguna mengklik salah satu produk, kita ingin menampilkan halaman detail yang berisi informasi lebih lanjut tentang produk tersebut. Kita bisa menggunakan Navigator.push() untuk berpindah ke halaman detail, dan memungkinkan pengguna untuk kembali ke halaman utama dengan menggunakan tombol back atau Navigator.pop(). 
 
 Berikut adalah kode yang bisa kita gunakan:
-
-
-'''// Membuat widget untuk halaman utama
+'''dart
+// Membuat widget untuk halaman utama
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -150,9 +149,9 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}'''
+}
 
-'''// Membuat widget untuk halaman detail
+// Membuat widget untuk halaman detail
 class DetailPage extends StatelessWidget {
   // Menerima objek produk sebagai parameter
   final Product product;
@@ -179,15 +178,16 @@ class DetailPage extends StatelessWidget {
       ),
     );
   }
-}'''
+}
 
-'''// Membuat kelas untuk merepresentasikan produk
+// Membuat kelas untuk merepresentasikan produk
 class Product {
   final String name;
   final int price;
 
   Product({required this.name, required this.price});
-}'''
+}
+'''
 
 - Navigator.pushReplacement(): Misalnya kita ingin membuat aplikasi yang memiliki tiga halaman, yaitu halaman login, halaman utama, dan halaman profil. Pada halaman login, kita menampilkan form untuk memasukkan email dan password pengguna. Ketika pengguna berhasil login, kita ingin menampilkan halaman utama yang berisi menu untuk berpindah ke halaman profil. Kita bisa menggunakan Navigator.pushReplacement() untuk berpindah dari halaman login ke halaman utama, dan menghapus halaman login dari tumpukan route. Hal ini akan mencegah pengguna untuk kembali ke halaman login dengan menggunakan tombol back atau Navigator.pop(). Berikut adalah kode yang bisa kita gunakan:
 
