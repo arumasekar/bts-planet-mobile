@@ -314,8 +314,8 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-}```
-
+}
+```
 
 Sumber:
 - https://stackoverflow.com/questions/71609393/what-is-the-difference-between-navigator-pushreplacement-and-navigator-pushandre
@@ -355,7 +355,8 @@ Sumber:
 Tujuan: Untuk memasukkan nama item yang akan ditambahkan.
 Alasan Penggunaan: TextFormField cocok digunakan untuk input teks sederhana. Saya menggunakan validator untuk memastikan bahwa field tidak kosong, yang menunjukkan bahwa nama item adalah informasi penting yang harus diisi.
 
-```Padding(
+```
+Padding(
   padding: const EdgeInsets.all(8),
   child: TextFormField(
     decoration: InputDecoration(
@@ -375,14 +376,16 @@ Alasan Penggunaan: TextFormField cocok digunakan untuk input teks sederhana. Say
       return null;
     },
   ),
-),```
+),
+```
 
 - TextFormField untuk Jumlah Item:
 
 Tujuan: Untuk memasukkan jumlah item dalam bentuk angka.
 Alasan Penggunaan: Lagi-lagi TextFormField digunakan, tetapi kali ini untuk input numerik. Saya mengubah teks input menjadi integer dan memvalidasi untuk memastikan bahwa input adalah angka dan tidak kosong. Ini penting untuk memastikan bahwa jumlah item yang diinput valid.
 
-```Padding(
+```
+Padding(
   padding: const EdgeInsets.all(8.0),
   child: TextFormField(
     decoration: InputDecoration(
@@ -407,14 +410,16 @@ Alasan Penggunaan: Lagi-lagi TextFormField digunakan, tetapi kali ini untuk inpu
       return null;
     },
   ),
-),```
+),
+```
 
 - TextFormField untuk Deskripsi:
 
 Tujuan: Untuk memasukkan deskripsi item.
 Alasan Penggunaan: Seperti input nama item, TextFormField digunakan untuk input teks yang lebih panjang seperti deskripsi. Validator memastikan bahwa deskripsi tidak dibiarkan kosong, menunjukkan pentingnya informasi deskriptif untuk setiap item.
 
-```Padding(
+```
+Padding(
   padding: const EdgeInsets.all(8.0),
   child: TextFormField(
     decoration: InputDecoration(
@@ -436,7 +441,8 @@ Alasan Penggunaan: Seperti input nama item, TextFormField digunakan untuk input 
       return null;
     },
   ),
-),```
+),
+```
 
 4. Bagaimana penerapan clean architecture pada aplikasi Flutter?
 
@@ -473,7 +479,8 @@ Sumber:
 
 - Pembuatan Widget Drawer: Pertama, buatlah sebuah berkas baru dengan nama left_drawer.dart dalam direktori widgets. Dalam berkas ini, buatlah kelas LeftDrawer yang mengembalikan widget Drawer. Isi Drawer ini akan berupa ListView yang berisi DrawerHeader dan beberapa item untuk navigasi.
 
-```import 'package:flutter/material.dart';
+```
+import 'package:flutter/material.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -491,9 +498,11 @@ class LeftDrawer extends StatelessWidget {
       ),
     );
   }
-}```
+}
+```
 
 - Menambahkan Navigasi ke Drawer: Tambahkan navigasi ke halaman yang diinginkan. Misalnya, tambahkan navigasi ke MyHomePage dan ShopFormPage. Gunakan widget ListTile untuk setiap item navigasi dan gunakan metode Navigator.pushReplacement() untuk navigasi.
+
 ```
 ListTile(
   leading: const Icon(Icons.home_outlined),
@@ -512,8 +521,10 @@ ListTile(
     // Navigasi ke ShopFormPage
   },
 ),
-Menghias Drawer: Tambahkan desain pada DrawerHeader. Misalnya, gunakan warna, teks, dan styling untuk membuat header yang menarik.
+```
 
+Menghias Drawer: Tambahkan desain pada DrawerHeader. Misalnya, gunakan warna, teks, dan styling untuk membuat header yang menarik.
+```
 const DrawerHeader(
   decoration: BoxDecoration(color: Colors.indigo),
   child: Column(
@@ -522,21 +533,25 @@ const DrawerHeader(
       // Konten tambahan
     ],
   ),
-),```
+),
+```
 
 - Menyertakan Drawer di Halaman Utama: Setelah membuat LeftDrawer, sertakan sebagai parameter drawer di widget Scaffold pada halaman utama aplikasi.
 
-```return Scaffold(
+```
+return Scaffold(
   appBar: AppBar(title: const Text('Shopping List')),
   drawer: const LeftDrawer(),
   // Konten lain dari Scaffold
-);```
+);
+```
 
 Selanjutnya, kita juga akan membuat form untuk memasukkan data barang menggunakan widget Form. Form ini akan berisi beberapa TextFormField untuk mengumpulkan informasi seperti nama, harga, dan deskripsi produk.
 
 - Pembuatan Halaman Form: Buatlah halaman baru dengan nama shoplist_form.dart. Dalam halaman ini, buatlah kelas ShopFormPage yang mengembalikan widget Form di dalam Scaffold.
 
-```class ShopFormPage extends StatefulWidget {
+```
+class ShopFormPage extends StatefulWidget {
   const ShopFormPage({super.key});
 
   @override
@@ -566,21 +581,25 @@ class _ShopFormPageState extends State<ShopFormPage> {
       ),
     );
   }
-}```
+}
+```
 
 - Menambahkan Field Input: Untuk setiap field input seperti nama, harga, dan deskripsi, gunakan TextFormField yang dibungkus dalam Padding. Tambahkan validator untuk memastikan input valid.
 
-```Padding(
+```
+Padding(
   padding: const EdgeInsets.all(8.0),
   child: TextFormField(
     // Konfigurasi untuk field nama
   ),
 ),
-// Ulangi untuk field harga dan deskripsi```
+// Ulangi untuk field harga dan deskripsi
+```
 
 - Menambahkan Tombol Simpan: Tambahkan tombol yang akan menyimpan data ketika ditekan. Gunakan ElevatedButton di dalam Align dan Padding.
 
-```Align(
+```
+Align(
   alignment: Alignment.bottomCenter,
   child: Padding(
     padding: const EdgeInsets.all(8.0),
@@ -593,11 +612,13 @@ class _ShopFormPageState extends State<ShopFormPage> {
       child: const Text('Simpan'),
     ),
   ),
-),```
+),
+```
 
 - Menampilkan Data: Gunakan showDialog() untuk menampilkan informasi yang telah disimpan saat tombol ditekan.
 
-```showDialog(
+```
+showDialog(
   context: context,
   builder: (context) {
     return AlertDialog(
@@ -611,6 +632,7 @@ class _ShopFormPageState extends State<ShopFormPage> {
       ),
     );
   },
-);```
+);
+```
 
 Terakhir, tambahkan fitur navigasi pada tombol di halaman utama untuk memungkinkan pengguna berpindah ke halaman form yang baru dibuat. Gunakan Navigator.push() untuk melakukan ini.
