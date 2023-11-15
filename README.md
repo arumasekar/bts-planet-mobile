@@ -110,7 +110,8 @@ Contoh penggunaan kedua metode tersebut yang tepat adalah:
 
 Berikut adalah kode yang bisa kita gunakan:
 
-<!-- // Membuat widget untuk halaman utama
+'''
+// Membuat widget untuk halaman utama
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -178,7 +179,7 @@ class DetailPage extends StatelessWidget {
       ),
     );
   }
-}
+}'''
 
 // Membuat kelas untuk merepresentasikan produk
 class Product {
@@ -187,7 +188,7 @@ class Product {
 
   Product({required this.name, required this.price});
 }
- -->
+
 
 - Navigator.pushReplacement(): Misalnya kita ingin membuat aplikasi yang memiliki tiga halaman, yaitu halaman login, halaman utama, dan halaman profil. Pada halaman login, kita menampilkan form untuk memasukkan email dan password pengguna. Ketika pengguna berhasil login, kita ingin menampilkan halaman utama yang berisi menu untuk berpindah ke halaman profil. Kita bisa menggunakan Navigator.pushReplacement() untuk berpindah dari halaman login ke halaman utama, dan menghapus halaman login dari tumpukan route. Hal ini akan mencegah pengguna untuk kembali ke halaman login dengan menggunakan tombol back atau Navigator.pop(). Berikut adalah kode yang bisa kita gunakan:
 
