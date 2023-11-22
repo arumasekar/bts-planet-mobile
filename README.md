@@ -636,3 +636,231 @@ showDialog(
 ```
 
 Terakhir, tambahkan fitur navigasi pada tombol di halaman utama untuk memungkinkan pengguna berpindah ke halaman form yang baru dibuat. Gunakan Navigator.push() untuk melakukan ini.
+
+-------------------------------------------
+
+# Tugas 9
+
+1. Apakah bisa kita melakukan pengambilan data JSON tanpa membuat model terlebih dahulu? Jika iya, apakah hal tersebut lebih baik daripada membuat model sebelum melakukan pengambilan data JSON?
+Tentu, kita dapat mengambil data dari JSON tanpa perlu membuat model terlebih dahulu. Ada beberapa cara untuk melakukannya. Salah satunya adalah menggunakan metode JObject.Parse(), yang memungkinkan kita untuk mengonversi string JSON menjadi objek JObject dan mengakses nilai-nilai yang dibutuhkan. Alternatif lainnya adalah menggunakan pustaka Json.NET untuk melakukan serialisasi dan deserialisasi objek JSON, atau dengan mendeserialisasi JSON ke dalam objek dinamis, atau menggunakan metode JsonValue.Parse() untuk mengurai teks JSON dan mendapatkan nilai dari JsonValue.
+
+Sumber:
+- https://stackoverflow.com/questions/75638056/how-to-parse-json-data-without-model-class-in-flutter-and-get-single-value
+- https://stackoverflow.com/questions/68343117/json-request-without-model-binding-in-asp-net-core-webapi
+
+2.  Jelaskan fungsi dari CookieRequest dan jelaskan mengapa instance CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+CookieRequest adalah sebuah kelas dalam aplikasi Flutter yang berguna untuk mengirim permintaan HTTP sambil memanfaatkan cookie yang tersimpan di CookieJar. Kelas ini memungkinkan untuk melakukan berbagai jenis permintaan HTTP, seperti GET, POST, PUT, DELETE, atau PATCH, dengan otomatis menambahkan header Cookie yang sesuai dengan URL yang dituju. Selain itu, CookieRequest juga memiliki kemampuan untuk menerima dan menyimpan cookie yang dikirim oleh server sebagai header Set-Cookie¹.
+
+Pentingnya berbagi instance CookieRequest ke semua komponen dalam aplikasi Flutter dapat dijelaskan oleh alasan berikut:
+- CookieRequest memungkinkan aplikasi Flutter untuk berinteraksi dengan server yang mengharuskan autentikasi atau menggunakan sesi berbasis cookie, seperti proses login, logout, atau mengakses data pribadi pengguna.
+- Dengan CookieRequest, manajemen cookie yang diperlukan oleh aplikasi Flutter menjadi lebih mudah, termasuk operasi seperti menyimpan, memuat, menghapus, atau memperbarui cookie secara otomatis.
+- Penggunaan CookieRequest dapat meningkatkan kinerja aplikasi Flutter dengan mengurangi jumlah permintaan yang harus dikirim ke server, sekaligus melindungi cookie dari potensi akses yang tidak sah atau serangan man-in-the-middle.
+
+Dengan kata lain, berbagi instance CookieRequest di seluruh komponen aplikasi Flutter membantu menjaga otentikasi, mengelola cookie secara efisien, dan meningkatkan tingkat keamanan dan performa keseluruhan aplikasi.
+
+Sumber:
+- https://codewithflutter.com/how-do-i-make-an-http-request-using-cookies-on-flutter/
+- https://learnpainless.com/how-set-cookie-header-with-request-flutter/
+- https://stackoverflow.com/questions/52500575/post-request-with-cookies-in-flutter
+- https://api.flutter.dev/flutter/dart-io/Cookie-class.html
+
+3.  Jelaskan mekanisme pengambilan data dari JSON hingga dapat ditampilkan pada Flutter.
+Untuk mengambil data dari JSON dan menampilkannya di Flutter, beberapa langkah yang perlu diikuti adalah sebagai berikut:
+- Membuat model data yang sesuai dengan struktur JSON yang akan diambil. Model data adalah kelas yang mendefinisikan properti dan metode terkait dengan data yang akan digunakan. Model data berguna untuk memvalidasi, memanipulasi, dan mentransformasi data dengan lebih mudah dan aman.
+- Menggunakan paket atau plugin yang mendukung pengiriman permintaan HTTP ke API yang menyediakan data JSON, seperti http, dio, chopper, dll. Paket atau plugin ini mempermudah pengaturan parameter, header, body, dan respon dari permintaan HTTP yang dikirim.
+- Menggunakan fungsi atau metode untuk mengurai atau mendeserialisasi data JSON yang diterima dari API menjadi objek Dart. Fungsi atau metode ini membantu mengonversi data JSON menjadi objek model data yang telah dibuat sebelumnya.
+- Menggunakan widget atau komponen dalam Flutter untuk menampilkan data JSON yang telah diubah menjadi objek Dart. Contoh widget yang berguna termasuk ListView, ListTile, Card, Text, Image, dan lainnya. Widget ini memungkinkan pembuatan tampilan yang menarik dan interaktif untuk data JSON yang akan ditampilkan.
+Di bawah ini adalah contoh kode yang menunjukkan bagaimana langkah-langkah ini dapat diterapkan dengan Flutter, dengan menggunakan paket http dan model data Character:
+
+```
+// Import paket yang diperlukan
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+// Membuat model data Character
+class Character {
+  final int id;
+  final String name;
+  final String image;
+  final String status;
+
+  Character({
+    required this.id,
+    required this.name,
+    required this.image,
+    required this.status,
+  });
+
+  factory Character.fromJson(Map<String, dynamic> json) {
+    return Character(
+      id: json['id'],
+      name: json['name'],
+      image: json['image'],
+      status: json['status'],
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'JSON Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  List<Character> characters = [];
+
+  Future<void> fetchCharacters() async {
+    final response = await http.get(Uri.parse('https://rickandmortyapi.com/api/character'));
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      Iterable list = result['results'];
+
+      setState(() {
+        characters = list.map((character) => Character.fromJson(character)).toList();
+      });
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  Widget characterList() {
+    return ListView.builder(
+      itemCount: characters.length,
+      itemBuilder: (context, index) {
+        return Card(
+          child: ListTile(
+            leading: Image.network(characters[index].image),
+            title: Text(characters[index].name),
+            subtitle: Text(characters[index].status),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('JSON Example'),
+      ),
+      body: characterList(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh),
+        onPressed: fetchCharacters,
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MyApp());
+}
+```
+
+4.  Jelaskan mekanisme autentikasi dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+Berikut adalah mekanisme autentikasi input data akun dari Flutter ke Django hingga penyelesaian proses autentikasi oleh Django dan tampilnya menu pada Flutter dalam bentuk parafrase:
+- Awalnya, pengguna memasukkan informasi akun, seperti username dan password, menggunakan widget TextField atau TextFormField di dalam aplikasi Flutter. Data akun ini kemudian disimpan dalam variabel atau controller yang dapat digunakan untuk melakukan permintaan HTTP.
+- Selanjutnya, Flutter mengirimkan permintaan HTTP POST ke API Django yang bertanggung jawab untuk menghasilkan token autentikasi, biasanya melalui URL seperti `http://IP:8000/get-token/`. Permintaan ini mencakup data akun pengguna sebagai bagian dari tubuh permintaan (body), serta header yang mengindikasikan jenis konten dan penerimaan data, seperti `{"Content-Type": "application/json", "Accept": "application/json"}`.
+- Setelah itu, Django menerima permintaan HTTP POST dari Flutter dan melakukan validasi terhadap data akun pengguna menggunakan modul autentikasi yang telah disediakan oleh Django. Jika data akun valid, Django akan menghasilkan token autentikasi dengan menggunakan paket atau plugin yang dapat mengelola token, seperti django-rest-framework-simplejwt, django-rest-framework-jwt, atau django-rest-knox. Token autentikasi ini kemudian dikirimkan kembali ke Flutter sebagai respons HTTP dalam format JSON, seperti `{"access": "nilai_token"}`.
+- Selanjutnya, Flutter menerima respons HTTP dari Django dan melakukan parsing atau deserialisasi data JSON yang berisi token autentikasi. Token autentikasi ini kemudian disimpan oleh Flutter dalam penyimpanan lokal atau aman, seperti SharedPreferences atau FlutterSecureStorage. Token ini akan digunakan untuk mengakses API Django yang memerlukan autentikasi, misalnya, `http://IP:8000/database/exercises/`.
+- Terakhir, berdasarkan status autentikasi pengguna, Flutter akan menampilkan menu atau halaman yang sesuai. Jika pengguna berhasil masuk, Flutter akan menampilkan menu atau halaman yang berisi berbagai fitur yang dapat digunakan pengguna, seperti melihat, menambah, mengedit, atau menghapus data. Namun, jika pengguna gagal masuk, Flutter dapat menampilkan pesan kesalahan atau mengarahkan kembali ke halaman login.
+
+Sumber:
+- https://dev.to/amartyadev/flutter-app-authentication-with-django-backend-1-21cp
+- https://stackoverflow.com/questions/56366828/authenticate-user-in-django-via-flutter-app-and-json-web-token
+- https://stackoverflow.com/questions/74383879/how-to-add-user-token-from-flutter-to-django-rest-framework-to-avoid-forbidden-a
+- https://docs.flutter.dev/cookbook/networking/authenticated-requests
+
+5.  Sebutkan seluruh widget yang kamu pakai pada tugas ini dan jelaskan fungsinya masing-masing.
+Pada tugas yang kita berikan, beberapa widget Flutter yang digunakan termasuk:
+- `MaterialApp`: Widget ini digunakan untuk menginisialisasi dan mengatur tema serta konfigurasi dasar aplikasi Flutter.
+- `Scaffold`: Digunakan untuk membuat tampilan dasar aplikasi, termasuk AppBar dan body.
+- `AppBar`: Menampilkan app bar di atas layar dengan judul yang sesuai.
+- `Drawer`: Membuat menu navigasi samping (drawer) yang dapat diakses dengan menggeser dari kiri ke kanan.
+- `TextField`: Digunakan untuk membuat input teks untuk username dan password pada halaman login.
+- `ElevatedButton`: Tombol yang digunakan untuk mengirim data login ke server Django.
+- `FutureBuilder`: Menggunakan Future untuk mengambil data dari web service Django dan menampilkan hasilnya pada tampilan aplikasi.
+- `ListView.builder`: Digunakan untuk menampilkan daftar produk yang diterima dari server dalam bentuk daftar scrollable.
+- `Text`: Untuk menampilkan teks pada tampilan aplikasi.
+- `AlertDialog`: Digunakan untuk menampilkan dialog pada aplikasi.
+- `SnackBar`: Untuk menampilkan pesan sementara yang muncul di bagian bawah layar.
+- `Icon`: Menampilkan ikon seperti ikon keranjang belanja pada menu.
+- `DrawerHeader`: Bagian header dari drawer yang berisi judul atau informasi tambahan.
+- `ListTile`: Digunakan untuk membuat item daftar pada drawer.
+- `Navigator`: Untuk melakukan navigasi antara halaman-halaman aplikasi.
+- `Provider`: Digunakan untuk manajemen state dalam aplikasi dan membagikan instance `CookieRequest` ke komponen-komponen yang membutuhkannya.
+- Beberapa widget lain seperti `Container`, `Column`, `Row`, dan `SizedBox` digunakan untuk mengatur tata letak dan penampilan tampilan aplikasi.
+
+6.  Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).
+
+**Langkah 1: Menambahkan Dependensi HTTP**
+
+Pada langkah ini, kita perlu menambahkan dependensi http ke proyek Flutter kita dengan menjalankan perintah berikut di terminal:
+
+```
+flutter pub add http
+```
+
+Ini akan menambahkan package http ke proyek kita, yang diperlukan untuk melakukan permintaan HTTP ke server Django.
+
+**Langkah 2: Mengaktifkan Akses Internet di AndroidManifest.xml**
+
+kita perlu memastikan bahwa aplikasi Flutter kita memiliki izin untuk mengakses internet. Untuk melakukan ini, tambahkan izin INTERNET di dalam file AndroidManifest.xml yang berada di dalam folder android/app/src/main/:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+```
+
+**Langkah 3: Membuat View Django untuk Login**
+
+Pada langkah ini, kita perlu membuat view Django yang akan digunakan untuk login. kita dapat membuatnya di views.py aplikasi Django kita. Pastikan view tersebut dapat menghandle permintaan POST yang berisi username dan password, dan memberikan respons JSON yang sesuai.
+
+**Langkah 4: Menghubungkan Flutter dengan CookieRequest**
+
+kita perlu menghubungkan halaman login Flutter dengan `CookieRequest` yang digunakan untuk mengirim permintaan HTTP ke server Django. kita dapat melakukannya dengan menambahkan baris berikut di dalam widget build pada halaman login Flutter:
+
+```dart
+final request = context.watch<CookieRequest>();
+```
+
+**Langkah 5: Mengimplementasikan Permintaan HTTP untuk Login**
+
+kita perlu mengimplementasikan permintaan HTTP POST untuk login di halaman login Flutter. Ini biasanya dilakukan pada saat tombol login ditekan. kita dapat menggunakan package http untuk mengirim data login ke server Django dan menangani responsnya.
+
+**Langkah 6: Menambahkan Respons Handling**
+
+Setelah kita mengirim permintaan login ke server Django, kita perlu menangani respons yang diterima. Jika login berhasil, kita dapat melakukan navigasi ke halaman lain atau menampilkan pesan sukses. Jika login gagal, kita dapat menampilkan pesan kesalahan.
+
+**Langkah 7: Membuat View Django untuk Logout**
+
+Pada langkah ini, kita perlu membuat view Django yang akan digunakan untuk logout. Seperti pada langkah 3, pastikan view tersebut dapat menghandle permintaan POST dan memberikan respons JSON yang sesuai.
+
+**Langkah 8: Menghubungkan Flutter dengan CookieRequest untuk Logout**
+
+kita perlu menghubungkan widget yang akan melakukan logout di Flutter dengan `CookieRequest` yang digunakan untuk mengirim permintaan logout ke server Django.
+
+**Langkah 9: Mengimplementasikan Permintaan HTTP untuk Logout**
+
+Pada langkah ini, kita perlu mengimplementasikan permintaan HTTP POST untuk logout di Flutter. Ini biasanya dilakukan pada saat tombol logout ditekan. kita dapat menggunakan package http untuk mengirim permintaan logout ke server Django dan menangani responsnya.
+
+**Langkah 10: Menambahkan Respons Handling untuk Logout**
+
+Setelah kita mengirim permintaan logout ke server Django, kita perlu menangani respons yang diterima. Jika logout berhasil, kita dapat melakukan navigasi ke halaman login atau menampilkan pesan sukses. Jika logout gagal, kita dapat menampilkan pesan kesalahan.
+
+Setelah mengikuti langkah-langkah di atas, kita akan memiliki implementasi login dan logout di aplikasi Flutter kita yang terhubung dengan server Django. Pastikan kita melakukan penyesuaian sesuai dengan kebutuhan aplikasi kita dan memastikan semua impor dan dependensi dikelola dengan baik.
