@@ -35,7 +35,6 @@ class Product {
 class Fields {
     int user;
     String name;
-    DateTime dateAdded;
     int price;
     String description;
     int amount;
@@ -44,7 +43,6 @@ class Fields {
         required this.user,
         required this.name,
         required this.amount,
-        required this.dateAdded,
         required this.price,
         required this.description,
     });
@@ -53,7 +51,6 @@ class Fields {
         user: json["user"],
         name: json["name"],
         amount: json["amount"],
-        dateAdded: DateTime.parse(json["date_added"]),
         price: json["price"],
         description: json["description"],
     );
@@ -62,7 +59,6 @@ class Fields {
         "user": user,
         "name": name,
         "amount": amount,
-        "date_added": "${dateAdded.year.toString().padLeft(4, '0')}-${dateAdded.month.toString().padLeft(2, '0')}-${dateAdded.day.toString().padLeft(2, '0')}",
         "price": price,
         "description": description,
     };
