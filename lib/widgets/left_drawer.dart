@@ -24,7 +24,7 @@ class LeftDrawer extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Item Insight',
+                  'BTS Planet',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
@@ -90,7 +90,6 @@ class LeftDrawer extends StatelessWidget {
             // Bagian redirection ke ShopFormPage
             onTap: () async {
               final response = await request.logout(
-                  // "http://dimas-herjunodarpito-tugas.pbp.cs.ui.ac.id/auth/logout/",
                   "http://127.0.0.1:8000/auth/logout/");
               String message = response["message"];
               if (response['status']) {
